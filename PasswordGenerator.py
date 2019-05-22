@@ -1,5 +1,7 @@
 import random
 import string
+import os
+import json
 
 def info():
     print ('Your new default password will include:')
@@ -90,6 +92,18 @@ class Password:
     def print(self):
         print ('Your password: ',self.password)
 
+    def write_file(self):
+        file_name= ('/'.join(str(os.getcwd()).split('\\')) + '/Password.json')
+        if not os.path.isfile(file_name):
+            with open(file_name, 'w') as fp:
+                json.dump([self.password], fp)
+        else:
+            with open(file_name) as feedsjson:
+                feeds = json.load(feedsjson)
+            feeds.append(self.password)
+            with open(file_name, 'w') as fp:
+                json.dump([self.password], fp)
+
 def main():
     info()
     edit_option()
@@ -101,6 +115,7 @@ def main():
         password = Password()
         password.customize_rule_remove([1,2,3,4])
         password.print()
+        password.write_file()
         numb_choice -=1
 
 if __name__=='__main__':
