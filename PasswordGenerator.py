@@ -2,6 +2,7 @@ import random
 import string
 import os
 import json
+import time
 
 def info():
     print ('Your new default password will include:')
@@ -31,6 +32,8 @@ class Password:
         self.digit = string.digits
         self.punctuation = string.punctuation
         self.delete_rule = delete_rule
+        self.website = ''
+        self.time = ''
         if (min_length >=8):
             self.min_length = min_length
             self.max_length = max_length
@@ -77,6 +80,7 @@ class Password:
         temp_choices=self.create_important_part(self.list_option)
         self.fill_the_rest(temp_choices,self.min_length,self.max_length)
         self.shuffle(self.password)
+        self.time = time.ctime()
 
     def rules_delete(self,list_delete):
         temp = ['lowercase', 'uppercase', 'digit', 'punctuation']
@@ -98,14 +102,18 @@ class Password:
     def write_file(self):
         file_name= ('/'.join(str(os.getcwd()).split('\\')) + '/Password.json')
         if not os.path.isfile(file_name):
+            data = {self.website: [[self.password,self.time]]}
             with open(file_name, 'w') as fp:
-                json.dump([self.password], fp)
+                json.dump(data, fp)
         else:
-            with open(file_name) as feedsjson:
+            with open(file_name,'r') as feedsjson:
                 feeds = json.load(feedsjson)
-            feeds.append(self.password)
+            if self.website in feeds:
+                feeds[self.website].append([self.password,self.time])
+            else:
+                feeds[self.website] = [self.password,self.time]
             with open(file_name, 'w') as fp:
-                json.dump([self.password], fp)
+                json.dump(feeds, fp)
 
 def main():
     info()
