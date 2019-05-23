@@ -17,12 +17,12 @@ def edit_option():
     optimize = input()
     if optimize == 'y':
         print('You want to change some option ?')
-        print('1. Terms')
-        print('2. Edit options')
-        print('3. Delete options')
-        print('4. Nothing')
+        print('1. Edit options')
+        print('2. Delete options')
+        print('3. Nothing')
     else:
         pass
+    return optimize
 
 class Password:
     def __init__(self,term=[''],min_length=8,max_length=11,delete_rule=['']):
@@ -89,6 +89,9 @@ class Password:
         self.rules_delete(list_delete)
         self.default_rule()
 
+    def customize_rule_edit(self,list_edit):
+        pass
+
     def print(self):
         print ('Your password: ',self.password)
 
@@ -106,14 +109,35 @@ class Password:
 
 def main():
     info()
-    edit_option()
+    optimize = edit_option()
+    if optimize == 'y':
+        print ('Your option: ',end='')
+        option = input()
 
+        print('Length of inputs:', end='')
+        numb = int(input())
+
+        if option == '1':
+            print('Edit options: ', end='')
+            list_edit = [input() for i in range(numb)]
+        elif option == '2':
+            print('Delete options: ', end='')
+            list_delete = [input() for i in range(numb)]
     print ('Number of passwords: ',end='')
     numb_choice = int(input())
     while numb_choice > 0:
         # Default option
         password = Password()
-        password.customize_rule_remove([1,2,3,4])
+        if optimize=='y':
+            choice = (input())
+            if (choice == '1'):
+                password.customize_rule_edit(list_edit)
+            elif (choice == '2'):
+                password.customize_rule_remove(list_delete)
+            else:
+                pass
+        else:
+            password.default_rule()
         password.print()
         password.write_file()
         numb_choice -=1
